@@ -1,5 +1,3 @@
--- Currently requires the csv file to have the same name as the video file, and be in same folder. Replaces from last .
-
 require('mpv_bindings');
 print("Success!");
 
