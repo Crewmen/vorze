@@ -12,6 +12,9 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+/*******************************************************************************************************************************/
+/* TODO: Delete the old csv file when loading a new one, test swapping video/csv files without restarting mpv, it should work! */
+/*******************************************************************************************************************************/
 
 /*******************************************************************/
 /* TODO: Add support for switching files without restarting player */
@@ -53,7 +56,7 @@ void handle_signal(int signum) {
     }
 }
 
-CsvEntry *csv, *ent;
+CsvEntry *csv = NULL, *ent = NULL;
 char serport[1024];
 int sock;
 int port=23867;
@@ -76,11 +79,10 @@ void init() {
     signal(SIGINT, handle_signal);
     signal(SIGQUIT, handle_signal);
     signal(SIGTERM, handle_signal);
-
-    //csvFree(csv);
 }
 
 void vorze_load_file(char* path) {
+    csvFree(csv); //Free the old csv, or free(null)
     csv=csvLoad(path);
     if (csv==NULL) exit(1);
     handleTs(0, csv, vorze);
