@@ -12,13 +12,6 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-/*******************************************************************************************************************************/
-/* TODO: Delete the old csv file when loading a new one, test swapping video/csv files without restarting mpv, it should work! */
-/*******************************************************************************************************************************/
-
-/*******************************************************************/
-/* TODO: Add support for switching files without restarting player */
-/*******************************************************************/
 
 /*****************************/
 /* TODO: Add record support? */
@@ -28,12 +21,18 @@
 /* TODO: Clean up makefile */
 /***************************/
 
+/******************************************************************************************/
+/* TODO: Add a flag in the lua to enable loading a csv of a different name than the video */
+/******************************************************************************************/
+
 
 /***********************************/
 /* Evil duplicated code from main.c! */
 /***********************************/
 
-
+/*******************************************************************************************************************************/
+/* This function should be moved into it's own file and included in both main.c and this, but I don't want to touch main.c atm */
+/*******************************************************************************************************************************/
 void handleTs(int ts, CsvEntry *csv, int vorzeHandle) {
     static char currV1=-1, currV2=-1;
     CsvEntry *ent;
@@ -45,40 +44,19 @@ void handleTs(int ts, CsvEntry *csv, int vorzeHandle) {
 }
 
 
-volatile sig_atomic_t gotalarm=0, gotkill=0;
-
-void handle_signal(int signum) {
-    if (signum==SIGALRM) {
-	gotalarm=1;
-	signal(SIGALRM, handle_signal);
-    } else if (signum==SIGINT||signum==SIGQUIT||signum==SIGTERM) {
-	gotkill=1;
-    }
-}
 
 CsvEntry *csv = NULL, *ent = NULL;
 char serport[1024];
-int sock;
-int port=23867;
 int vorze;
-int controlvorze=1;
-int offset=0;
 
 void init() {
 
     strcpy(serport, "");
 
-
-    if (!controlvorze) enableSimulation();
-
     if (strlen(serport)==0) vorzeDetectPort(serport);
 
     vorze=vorzeOpen(serport);
     if (vorze<=0) exit(1);
-
-    signal(SIGINT, handle_signal);
-    signal(SIGQUIT, handle_signal);
-    signal(SIGTERM, handle_signal);
 }
 
 void vorze_load_file(char* path) {
