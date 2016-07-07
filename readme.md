@@ -16,9 +16,12 @@ compile one yourself.
 You will also need the standard gcc stuff: make, gcc, ld. You'll probably have those installed
 already.
 
+For mpv_bindings, you will need the lua library, liblua5.2
+If you get errors that the lua headers weren't found, then you might have to adjust LIBLUA_INCDIR in the makefile for your system.
+
 COMPILING
 
-Just run 'make' and you should end up with a 'vorzemplayer' executable
+Just run 'make' and you should end up with a 'vorzemplayer' executable and mpv_bindings.so
 
 USING IT
 
@@ -33,6 +36,19 @@ USING IT
 - Run mplayer with the -udp-master option to play the movie:
   mplayer -udp-master faphero1.mp4
 - Enjoy!
+
+MPV
+
+- Turn on your Vorze
+- Plug in the stick
+- Start up a terminal for the rest of the commands
+- Run 'load.sh'. It will ask for your sudo-password to load the driver for the
+  chipset on the stick and bind it to the (non-standard) PID/VID it uses.
+- Run mpv with sudo, with the mpv_vorze.lua script.
+  EX,  sudo mpv -script=mpv_vorze.lua /path/to/video/file
+  - The csv file must be in the directory as the video file, and with the same name, except with .csv replacing the video file extension.
+  - mpv_bindings.so must be either in the current working directory, or in a place mpv can find it, eg) /usr/local/lib/lua/5.2/mpv_bindings.so
+- Once it's going, you can even drag and drop video files
 
 MORE FUN
 
